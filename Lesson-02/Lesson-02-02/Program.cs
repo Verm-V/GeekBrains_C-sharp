@@ -65,7 +65,7 @@ namespace Lesson_02_02
         /// <summary>
         /// Метод запрашивает у пользователя номер месяца.
         /// </summary>
-        /// <returns>Возвращает число от 1 до 12
+        /// <returns>Возвращает число от 1 до 12</returns>
         private static int MonthInput()
         {
             bool check = false; //флаг проверки

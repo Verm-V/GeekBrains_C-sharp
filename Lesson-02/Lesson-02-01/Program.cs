@@ -13,12 +13,12 @@ namespace Lesson_02_01
 
             int min, max;
             //запросили минимум
-            min = TemperetreInput("Введите МИНИМАЛЬНУЮ температуру за сутки");
+            min = TemperatureInput("Введите МИНИМАЛЬНУЮ температуру за сутки");
 
             Console.WriteLine($"--------\n");
 
             //запрос максимума, будет повторяться до тех пор пока не окажется больше чем минимум
-            while ((max = TemperetreInput("Введите МАКСИМАЛЬНУЮ температуру за сутки")) <= min)
+            while ((max = TemperatureInput("Введите МАКСИМАЛЬНУЮ температуру за сутки")) <= min)
                 {Console.WriteLine("Максимальная температура должна быть больше минимальной. Повторите ввод.\n");}
 
             Console.WriteLine($"--------\n");
@@ -37,7 +37,7 @@ namespace Lesson_02_01
         /// </summary>
         /// <param name="message">Сообщение для пользователя.</param> 
         /// <returns>Введенное пользователем значение температуры.</returns>
-        private static int TemperetreInput(string message)
+        private static int TemperatureInput(string message)
         {
             bool check = false; //флаг проверки
             int temperature = 0;

@@ -11,7 +11,7 @@ namespace Lesson_02_02
         static void Main(string[] args)
         {
             int monthNumber;
-            string monthName = "";
+            string monthName = string.Empty;
             //запросили номер месяца
             switch(monthNumber = MonthInput())
             {

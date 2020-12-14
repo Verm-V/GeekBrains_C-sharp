@@ -14,7 +14,7 @@ namespace Lesson_02_03
 
             Console.WriteLine($"--------\n");
 
-            Console.WriteLine("Введенное число является " + ((number % 2 == 0) ? "" : "НЕ") + "четным.");
+            Console.WriteLine("Введенное число является " + ((number % 2 == 0) ? string.Empty : "НЕ") + "четным.");
 
             Console.WriteLine($"\nНажмите любую клавишу. ");
             Console.ReadKey();

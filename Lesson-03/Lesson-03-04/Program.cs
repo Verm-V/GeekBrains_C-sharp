@@ -114,7 +114,9 @@ namespace Lesson_03_04
                     field[row, column] = true;
 
                     //вот это круто, не знал раньше про пустые переменные
-                    _ = direction ? column++ : row++;
+                    //_ = direction ? column++ : row++;
+                    if (direction) column++;
+                    else row++;
                 }
             }
             return check;

@@ -9,8 +9,10 @@ namespace Lesson_05_04
 {
     class Program
     {
-        ///<summary> имя файла для записи </summary>
-        const string filename = "FileList.txt";
+        ///<summary> имя файла для записи поиска с рекурсией</summary>
+        const string filenameRecursion = "FileListRecursion.txt";
+        ///<summary> имя файла для записи поиска без рекурсии</summary>
+        const string filenameNoRecursion = "FileListNoRecuersion.txt";
 
         static void Main(string[] args)
         {
@@ -18,9 +20,19 @@ namespace Lesson_05_04
             string path = PathInput("Пожалуйста, введите путь к каталогу,\nсписок файлов из которого нужно получить:");
             string seek = string.Empty;//сюда запишется результат просмотра заданного каталога
 
-            SeekDirectory(path, ref seek);
+            //поиск рекурсией
+            SeekDirectoryRecursion(path, ref seek);
+            Console.WriteLine("Список полученный с помощью рекурсии");
             Console.WriteLine(seek);
-            File.WriteAllText(filename, seek);
+            File.WriteAllText(filenameRecursion, seek);
+
+            //поиск без рекурсии
+            seek = string.Empty;
+            seek = SeekDirectoryNoRecursion(path);
+            Console.WriteLine("Список полученный без рекурсии");
+            Console.WriteLine(seek);
+            File.WriteAllText(filenameNoRecursion, seek);
+
 
             MessageWaitKey("---------");
 
@@ -31,22 +43,47 @@ namespace Lesson_05_04
         /// </summary>
         /// <param name="path">путь к просматриваемому каталогу</param>
         /// <param name="seek">сюда записывается все найденное</param>
-        private static void SeekDirectory(string path, ref string seek)
+        private static void SeekDirectoryRecursion(string path, ref string seek)
         {
             string[] allDirs = Directory.GetDirectories(path);
             foreach (string dirName in allDirs)
             {
-                seek = $"{seek}\n{dirName}";
+                seek += $"{dirName}\n";
                 //Console.WriteLine(dirName);
-                SeekDirectory(dirName, ref seek);
+                SeekDirectoryRecursion(dirName, ref seek);
             }
 
             string[] allFiles = Directory.GetFiles(path);
             foreach (string fileName in allFiles)
             {
-                seek = $"{seek}\n{fileName}";
+                seek += $"{fileName}\n";
                 //Console.WriteLine(fileName);
             }
+        }
+
+        /// <summary>
+        /// выдает полный список каталогов и файлов в заданном каталоге без использования рекурсии
+        /// </summary>
+        /// <param name="path">путь к просматриваемому каталогу</param>
+        /// <returns>строку содержащую все найденные файлы и каталоги</returns>
+        private static string SeekDirectoryNoRecursion(string path)
+        {
+            string seek = string.Empty;
+            string[] allDirs = Directory.GetDirectories(path, "*", SearchOption.AllDirectories);
+            
+            foreach (string dirName in allDirs)
+            {
+                seek += $"{dirName}\n";
+                //Console.WriteLine(dirName);
+            }
+
+            string[] allFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+            foreach (string fileName in allFiles)
+            {
+                seek += $"{fileName}\n";
+                //Console.WriteLine(fileName);
+            }
+            return seek;
         }
 
         /// <summary>

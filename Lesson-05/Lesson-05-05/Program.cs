@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Text.Json;
 
 namespace Lesson_05_05
 {
@@ -10,9 +12,16 @@ namespace Lesson_05_05
     {
         /// <summary> имя файла для записи </summary>
         const string filename = "ToDoList.json";
+
         /// <summary> пункты главного меню, последний пункт выход из программы </summary>
-        private static string[] mainMenu = new string[4] 
-        { "Добавить задание", "Удалить задание", "Изменить статус задания", "Выход" };
+        private static string[] mainMenu = new string[] 
+        { "Добавить задание", "Удалить задание", "Изменить статус задания", "Загрузить список с диска", "Сохранить список на диск", "Выход" };
+
+        /// <summary> опции сериализации </summary>
+        private static JsonSerializerOptions options = new JsonSerializerOptions { AllowTrailingCommas = true, WriteIndented = true };
+
+        /// <summary> максимальная длина для описания задачи </summary>
+        const int TASK_MAX_LENGTH = 40;
 
         static void Main(string[] args)
         {
@@ -21,13 +30,7 @@ namespace Lesson_05_05
             for (int i = 0; i < mainMenu.Length; i++)
                 mainMenuMessage += $"{i + 1} - {mainMenu[i]}\n";
 
-            //отладочный массив
-            ToDo[] taskList = new ToDo[3];
-            taskList[0] = new ToDo("Выполнить домашнее задание");
-            taskList[1] = new ToDo("Закоммитить изменения");
-            taskList[2] = new ToDo("Сдать домашнее задание");
-            taskList[0].IsDone = true;
-            //--
+            TaskList taskList = new TaskList();
 
             bool isExit = false; //если true, то происходит выход из основного цикла
             //основной рабочий цикл
@@ -39,24 +42,47 @@ namespace Lesson_05_05
                 switch (IntNumberInput(mainMenuMessage, 1, mainMenu.Length))
                 {
                     case 1: //добавление задания
+                        ListOutput(taskList);
+                        taskList.AddItem(StringInput("Введите текст задачи", 40));
+                        ListOutput(taskList);
+                        MessageWaitKey($"Новое задание добавлено в список.");
                         break;
                     case 2: //удаление задания
+                        ListOutput(taskList);
+                        number = IntNumberInput("Введите номер задания", 1, taskList.Count) - 1;
+                        taskList.DeleteItem(number);
+                        ListOutput(taskList);
+                        MessageWaitKey($"Задание №{number} удалено из списка задач");
                         break;
                     case 3: //изменение статуса задания
-                        number = IntNumberInput("Введите номер задания", 1, taskList.Length + 1) - 1;
-                        taskList[number].IsDone = !taskList[number].IsDone;
+                        ListOutput(taskList);
+                        number = IntNumberInput("Введите номер задания", 1, taskList.Count) - 1;
+                        taskList.ChangeStatus(number);
                         break;
-                    case 4: //выход
+                    case 4: //считать список из файла на диске
+                        if (File.Exists(filename))
+                        { 
+                            taskList.DeserializeJSON(File.ReadAllText(filename));
+                            ListOutput(taskList);
+                            MessageWaitKey($"Список задач успешно загружен из файла {filename}");
+                        }
+                        else
+                        {
+                            MessageWaitKey("Файл со списком задач отсутствует.");
+                        }
+                        break;
+                    case 5: //сохранить список в файл на диске
+                        ListOutput(taskList);
+                        File.WriteAllText(filename, taskList.SerializeJSON());
+                        MessageWaitKey($"Список задач успешно сохранен в файл {filename}");
+                        break;
+                    case 6: //выход
                         isExit = true;
+                        MessageWaitKey("До свидания.");
                         break;
                 }
 
             }
-
-
-
-            Console.WriteLine("\n--------\npress any key\n");
-            Console.ReadKey();
 
         }
 
@@ -64,18 +90,18 @@ namespace Lesson_05_05
         /// <summary>
         /// выводит на экран содержимое списка заданий
         /// </summary>
-        private static void ListOutput(ToDo [] taskList)
+        private static void ListOutput(TaskList taskList)
         {
             Console.Clear();
             Console.WriteLine("Список заданий");
             Console.WriteLine("+---+-----+------------------------------------------+");
-            for (int i = 0; i < taskList.Length; i++)
+            for (int i = 0; i < taskList.Count; i++)
             {
                 Console.Write(string.Format(
                     "| {0,1:d} | [{1,-1}] | {2,-40} |\n", 
                     i + 1,
-                    (taskList[i].IsDone) ? 'X' : '.',
-                    taskList[i].Title));
+                    (taskList.GetStatus(i)) ? 'X' : '.',
+                    taskList.GetTask(i)));
             }
             Console.WriteLine("+---+-----+------------------------------------------+\n");
         }
@@ -127,6 +153,15 @@ namespace Lesson_05_05
                     check = true;
             }
             return input;
+        }
+
+        /// <summary> выводит на экран сообщение и ждет нажатия любой клавиши </summary>
+        /// <param name="message">сообщение для пользователя</param>
+        private static void MessageWaitKey(string message)
+        {
+            Console.WriteLine(message);
+            Console.WriteLine("Нажмите любую клавишу.");
+            Console.ReadKey();
         }
     }
 }

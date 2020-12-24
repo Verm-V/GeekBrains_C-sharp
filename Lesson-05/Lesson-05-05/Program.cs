@@ -43,7 +43,7 @@ namespace Lesson_05_05
                 {
                     case 1: //добавление задания
                         ListOutput(taskList);
-                        taskList.AddItem(StringInput("Введите текст задачи", 40));
+                        taskList.AddItem(StringInput("Введите текст задачи", TASK_MAX_LENGTH));
                         ListOutput(taskList);
                         MessageWaitKey($"Новое задание добавлено в список.");
                         break;
@@ -52,7 +52,7 @@ namespace Lesson_05_05
                         number = IntNumberInput("Введите номер задания", 1, taskList.Count) - 1;
                         taskList.DeleteItem(number);
                         ListOutput(taskList);
-                        MessageWaitKey($"Задание №{number} удалено из списка задач");
+                        MessageWaitKey($"Задание №{number+1} удалено из списка задач");
                         break;
                     case 3: //изменение статуса задания
                         ListOutput(taskList);
@@ -97,11 +97,10 @@ namespace Lesson_05_05
             Console.WriteLine("+---+-----+------------------------------------------+");
             for (int i = 0; i < taskList.Count; i++)
             {
-                Console.Write(string.Format(
-                    "| {0,1:d} | [{1,-1}] | {2,-40} |\n", 
-                    i + 1,
-                    (taskList.GetStatus(i)) ? 'X' : '.',
-                    taskList.GetTask(i)));
+                Console.Write(string.Format($"" +
+                    $"| {i + 1,1:d} " +
+                    $"| [{(taskList.GetStatus(i) ? 'X' : '.')}] " +
+                    $"| {taskList.GetTask(i),-TASK_MAX_LENGTH} |\n"));
             }
             Console.WriteLine("+---+-----+------------------------------------------+\n");
         }

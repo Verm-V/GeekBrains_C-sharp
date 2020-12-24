@@ -37,7 +37,7 @@ namespace Lesson_05_05
         /// <param name="number">номер задачи в списке</param>
         public void DeleteItem(int number)
         {
-            if (number >= 0 && number < taskList.Count())
+            if (CheckIndex(number))
                 taskList.RemoveAt(number);
         }
 
@@ -45,7 +45,7 @@ namespace Lesson_05_05
         /// <param name="number">номер задачи в списке</param>
         public void ChangeStatus(int number)
         {
-            if (number >= 0 && number < taskList.Count())
+            if (CheckIndex(number))
                 taskList[number].IsDone = !taskList[number].IsDone;
         }
 
@@ -54,7 +54,7 @@ namespace Lesson_05_05
         /// <param name="status">устанавливаемый статус</param>
         public void SetStatus(int number, bool status)
         {
-            if (number >= 0 && number < taskList.Count())
+            if (CheckIndex(number))
                 taskList[number].IsDone = status;
         }
 
@@ -64,7 +64,7 @@ namespace Lesson_05_05
         /// <returns> содержание задачи, либо пустая строка если задачи не существует</returns>
         public string GetTask(int number)
         {
-            if (number >= 0 && number < taskList.Count())
+            if (CheckIndex(number))
                 return taskList[number].Title;
             else return String.Empty;
         }
@@ -74,7 +74,7 @@ namespace Lesson_05_05
         /// <returns> статус задачи, либо false если задачи не существует</returns>
         public bool GetStatus(int number)
         {
-            if (number >= 0 && number < taskList.Count())
+            if (CheckIndex(number))
                 return taskList[number].IsDone;
             else return false;
         }
@@ -84,7 +84,7 @@ namespace Lesson_05_05
         /// <returns> полную задачу, либо пустую если задачи не существует</returns>
         public ToDo GetFullTask(int number)
         {
-            if (number >= 0 && number < taskList.Count())
+            if (CheckIndex(number))
                 return taskList[number];
             else return new ToDo();
         }
@@ -101,6 +101,14 @@ namespace Lesson_05_05
         public void DeserializeJSON(string json)
         {
             taskList = JsonSerializer.Deserialize<List<ToDo>>(json);
+        }
+
+        /// <summary> проверяет есть ли элемент с таким индексом в списке </summary>
+        /// <param name="index">индекс элемента в списке</param>
+        /// <returns>true - если такой элемент есть</returns>
+        private bool CheckIndex(int index)
+        {
+            return (index >= 0 && index < taskList.Count()) ? true : false;
         }
 
 

@@ -16,70 +16,70 @@ namespace Lesson_06
         /// <summary> Ключи для словаря аргументов командной строки </summary>
         enum Arguments
         {
-            help,
-            lines,
-            lines_help
+            Help,
+            Lines,
+            LinesHelp
         }
 
         /// <summary> Словарь аргументов командной строки </summary>
         private static readonly Dictionary<Arguments, string> arguments = new Dictionary<Arguments, string>
         {
-        { Arguments.help, "-h"},
-        { Arguments.lines, "-l"},
-        { Arguments.lines_help, "-l <int> - number of processes to show on screen. 0 - to show all"},
+        { Arguments.Help, "-h"},
+        { Arguments.Lines, "-l"},
+        { Arguments.LinesHelp, "-l <int> - number of processes to show on screen. 0 - to show all"},
         };
 
         /// <summary> Ключи для словаря с сообщениями об ошибках </summary>
         enum Errors
         {
-            process_not_found,
-            process_kill_fail,
-            process_kill_succes,
-            repeat_input_error,
-            repeat_input_string_too_long
+            ProcessNotFound,
+            ProcessKillFail,
+            ProcessKillSucces,
+            RepeatInputError,
+            RepeatInputStringTooLong
         }
 
         /// <summary> Словарь с сообщениями об ошибках </summary>
         private static readonly Dictionary<Errors, string> errors = new Dictionary<Errors, string>
         {
-        { Errors.process_not_found, "Процесс не найден."},
-        { Errors.process_kill_succes, "Процесс успешно завершен."},
-        { Errors.process_kill_fail, "Не удалось завершить процесс."},
-        { Errors.repeat_input_error, "Ошибка. Повторите ввод."},
-        { Errors.repeat_input_string_too_long, "Превышена максимальная длина строки, повторите ввод."}
+        { Errors.ProcessNotFound, "Процесс не найден."},
+        { Errors.ProcessKillSucces, "Процесс успешно завершен."},
+        { Errors.ProcessKillFail, "Не удалось завершить процесс."},
+        { Errors.RepeatInputError, "Ошибка. Повторите ввод."},
+        { Errors.RepeatInputStringTooLong, "Превышена максимальная длина строки, повторите ввод."}
         };
 
         /// <summary> Ключи для словаря с ссобщениями для пользователя </summary>
         enum Messages
         {
-            choose_option,
-            enter_process_ID_to_kill,
-            enter_process_name_to_kill,
-            press_any_key,
-            minimum,
-            maximum,
-            symbols,
-            from,
-            to,
-            process_list,
-            amount
+            ChooseOption,
+            EnterProcessIDToKill,
+            EnterProcessNameToKill,
+            PressAnyKey,
+            Minimum,
+            Maximum,
+            Symbols,
+            From,
+            To,
+            ProcessList,
+            Amount
 
         }
 
         /// <summary> Словарь с сообщениями для пользователя </summary>
         private static readonly Dictionary<Messages, string> messages = new Dictionary<Messages, string>
         {
-        { Messages.choose_option, "Выберите опцию:"},
-        { Messages.enter_process_ID_to_kill, "Введите ID процесса котороый требуется удалить."},
-        { Messages.enter_process_name_to_kill, "Введите имя процесса котороый требуется удалить."},
-        { Messages.press_any_key, "Нажмите любую клавишу."},
-        { Messages.minimum, "минимум"},
-        { Messages.maximum, "максимум"},
-        { Messages.symbols, "символов"},
-        { Messages.from, "от"},
-        { Messages.to, "до"},
-        { Messages.process_list, "Список процессов"},
-        { Messages.amount, "всего"}
+        { Messages.ChooseOption, "Выберите опцию:"},
+        { Messages.EnterProcessIDToKill, "Введите ID процесса котороый требуется удалить."},
+        { Messages.EnterProcessNameToKill, "Введите имя процесса котороый требуется удалить."},
+        { Messages.PressAnyKey, "Нажмите любую клавишу."},
+        { Messages.Minimum, "минимум"},
+        { Messages.Maximum, "максимум"},
+        { Messages.Symbols, "символов"},
+        { Messages.From, "от"},
+        { Messages.To, "до"},
+        { Messages.ProcessList, "Список процессов"},
+        { Messages.Amount, "всего"}
         };
 
                 /// <summary> Пункты главного меню, последний пункт выход из программы </summary>
@@ -127,12 +127,12 @@ namespace Lesson_06
             //Обработка аругментов командной строки
             if (args.Length != 0)
             {
-                if(args[0] == arguments[Arguments.help])//Вывод справки по аргументам
+                if(args[0] == arguments[Arguments.Help])//Вывод справки по аргументам
                 {
-                    Console.WriteLine(arguments[Arguments.lines_help]);
+                    Console.WriteLine(arguments[Arguments.LinesHelp]);
                     return 0;
                 }
-                else if (args[0] == arguments[Arguments.lines])//Изменение количества процессов выводимых на экран
+                else if (args[0] == arguments[Arguments.Lines])//Изменение количества процессов выводимых на экран
                 {
                     try
                     {
@@ -147,7 +147,7 @@ namespace Lesson_06
             }
 
             //Формируем сообщение главного меню справочника
-            string mainMenuMessage = messages[Messages.choose_option]+"\n";
+            string mainMenuMessage = messages[Messages.ChooseOption]+"\n";
             for (int i = 0; i < mainMenu.Length; i++)
                 mainMenuMessage += $"{i + 1} - {mainMenu[i]}\n";
 
@@ -155,8 +155,8 @@ namespace Lesson_06
             Process[] processes = Process.GetProcesses();
 
 
-            int number = 0;
-            ScreenOutput(processes, number, lines);
+            int processIndex = 0;
+            ScreenOutput(processes, processIndex, lines);
 
             bool isExit = false;
             //Основной цикл
@@ -166,35 +166,35 @@ namespace Lesson_06
                 switch (input)
                 {
                     case 1://line up
-                        number--;
-                        number = CheckSetLimits(number, processes.Length, lines);
+                        processIndex--;
+                        processIndex = CheckSetLimits(processIndex, processes.Length, lines);
                         break;
                     case 2://line down
-                        number++;
-                        number = CheckSetLimits(number, processes.Length, lines);
+                        processIndex++;
+                        processIndex = CheckSetLimits(processIndex, processes.Length, lines);
                         break;
                     case 3://page up
-                        number -= lines;
-                        number = CheckSetLimits(number, processes.Length, lines);
+                        processIndex -= lines;
+                        processIndex = CheckSetLimits(processIndex, processes.Length, lines);
                         break;
                     case 4://page down
-                        number += lines;
-                        number = CheckSetLimits(number, processes.Length, lines);
+                        processIndex += lines;
+                        processIndex = CheckSetLimits(processIndex, processes.Length, lines);
                         break;
                     case 5://refrsh process list
                         processes = Process.GetProcesses();
-                        number = 0;
+                        processIndex = 0;
                         break;
                     case 6://kill process by ID
-                        ScreenOutput(processes, number, lines);
-                        int id = NumberInput(messages[Messages.enter_process_ID_to_kill], 0, ID_MAX, false);
+                        ScreenOutput(processes, processIndex, lines);
+                        int id = NumberInput(messages[Messages.EnterProcessIDToKill], 0, ID_MAX, false);
                         Console.WriteLine(KillProcess(processes, id));
                         MessageWaitKey(string.Empty);
                         processes = Process.GetProcesses();
                         break;
                     case 7://kill process by name
-                        ScreenOutput(processes, number, lines);
-                        string name = StringInput(messages[Messages.enter_process_name_to_kill], NAME_FIELD_LENGTH);
+                        ScreenOutput(processes, processIndex, lines);
+                        string name = StringInput(messages[Messages.EnterProcessNameToKill], NAME_FIELD_LENGTH);
                         Console.WriteLine(KillProcess(processes, name));
                         MessageWaitKey(string.Empty);
                         processes = Process.GetProcesses();
@@ -203,7 +203,7 @@ namespace Lesson_06
                         isExit = true;
                         break;
                 }
-                ScreenOutput(processes, number, lines);
+                ScreenOutput(processes, processIndex, lines);
             }
 
 
@@ -238,7 +238,7 @@ namespace Lesson_06
             int scrollPosition = (number * lines / (processes.Length - lines + 1));
                         
             Console.Clear();
-            Console.WriteLine($"{messages[Messages.process_list]} ({messages[Messages.amount]} {processes.Length})");
+            Console.WriteLine($"{messages[Messages.ProcessList]} ({messages[Messages.Amount]} {processes.Length})");
             Console.WriteLine("   №      ID    Process name");
             Console.WriteLine("+-----+-------+------------------------------------------+");
             for (int i = number; i < number + lines; i++)
@@ -258,7 +258,7 @@ namespace Lesson_06
         private static void MessageWaitKey(string message)
         {
             Console.WriteLine(message);
-            Console.WriteLine(messages[Messages.press_any_key]);
+            Console.WriteLine(messages[Messages.PressAnyKey]);
             Console.ReadKey();
         }
 
@@ -278,12 +278,12 @@ namespace Lesson_06
             string input = string.Empty;
             while (!check) //Цикл будет повторятся, пока вводимая строка не пройдет все проверки
             {
-                Console.WriteLine($"{message} ({messages[Messages.maximum]} {max_length} {messages[Messages.symbols]})");
+                Console.WriteLine($"{message} ({messages[Messages.Maximum]} {max_length} {messages[Messages.Symbols]})");
                 //Ввод и проверка на то, длину
                 input = Console.ReadLine();
                 if (input.Length > max_length)
                 {
-                    Console.WriteLine(errors[Errors.repeat_input_string_too_long]);
+                    Console.WriteLine(errors[Errors.RepeatInputStringTooLong]);
                     check = false;
                 }
                 else
@@ -305,7 +305,7 @@ namespace Lesson_06
         {
             bool isInputCorrect = false; //флаг проверки
             int input = 0;
-            Console.WriteLine($"{message}({messages[Messages.from]} {min} {messages[Messages.to]} {max})");
+            Console.WriteLine($"{message}({messages[Messages.From]} {min} {messages[Messages.To]} {max})");
             while (!isInputCorrect) //Цикл будет повторятся, пока вводимое число не пройдет все проверки
             {
                 if (isOneDigit)
@@ -328,7 +328,7 @@ namespace Lesson_06
                             //за пределы консоли, просто ничего не делаем и остаемся на месте
                         }
                     else
-                        Console.WriteLine(errors[Errors.repeat_input_error]);
+                        Console.WriteLine(errors[Errors.RepeatInputError]);
             }
             return input;
         }
@@ -346,11 +346,11 @@ namespace Lesson_06
             try
             {
                 process.Kill();
-                message = errors[Errors.process_kill_succes];
+                message = errors[Errors.ProcessKillSucces];
             }
             catch
             {
-                message = errors[Errors.process_kill_fail];
+                message = errors[Errors.ProcessKillFail];
             }
             return message;
 
@@ -372,7 +372,7 @@ namespace Lesson_06
             if (index >= 0)
                 message = KillProcess(processes[index]);
             else
-                message = errors[Errors.process_not_found];
+                message = errors[Errors.ProcessNotFound];
 
             return message;
         }
@@ -393,7 +393,7 @@ namespace Lesson_06
             if (index >= 0)
                 message = KillProcess(processes[index]);
             else
-                message = errors[Errors.process_not_found];
+                message = errors[Errors.ProcessNotFound];
 
             return message;
 

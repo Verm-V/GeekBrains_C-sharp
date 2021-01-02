@@ -9,13 +9,13 @@ namespace Lesson_07
     class Program
     {
         /// <summary> Символ которым рисуем блока </summary>
-        private const char BLOCK = '#';
+        private static readonly char BLOCK = '#';
         /// <summary> Минмальная длина стороны квадрата </summary>
-        private const int MIN_LENGTH = 2;
+        private static readonly int MIN_LENGTH = 2;
         /// <summary> Максимальная длина стороны квадрата </summary>
-        private const int MAX_LENGTH = 10;
+        private static readonly int MAX_LENGTH = 10;
         /// <summary> Задержка для визуализации рисования </summary>
-        private const int DELAY = 100;
+        private static readonly int DELAY = 100;
 
         static void Main(string[] args)
         {
